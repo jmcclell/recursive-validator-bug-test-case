@@ -19,10 +19,10 @@ use Acme\DemoBundle\Entity\Bar;
 class DemoController extends Controller
 {
     /**
-     * @Route("/foo", name="_demo_foo")
+     * @Route("/foo-with-default", name="_demo_foo_with_default")
      * @Template()
      */
-    public function fooAction(Request $request)
+    public function fooWithDefaultAction(Request $request)
     {
         $foo = new Foo();
 
@@ -46,6 +46,26 @@ class DemoController extends Controller
          * default value is set for one (or more) nested objects via this method.
          */
         $foo->bar = new Bar(1);
+        
+        $form = $this->createForm(new FooType(), $foo);
+        $form->submit($request->request->all(), false);
+
+        if ($form->isValid()) {            
+            return new Response('Valid.', 200);
+        } else {
+            return new Response('Invalid.', 400);
+        }
+    }
+
+    /**
+     * @Route("/foo-without-default", name="_demo_foo_without_default")
+     * @Template()
+     */
+    public function fooWithoutDefaultAction(Request $request)
+    {
+        $foo = new Foo();
+
+        //$foo->bar = new Bar(1);
         
         $form = $this->createForm(new FooType(), $foo);
         $form->submit($request->request->all(), false);
