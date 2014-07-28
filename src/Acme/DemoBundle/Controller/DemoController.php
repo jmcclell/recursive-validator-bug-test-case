@@ -27,14 +27,12 @@ class DemoController extends Controller
         $foo = new Foo();
 
         /**
-         * Using the new recursive validator, if I leave the following line commented and submit the form
+         * If I leave the following line commented and submit the form
          * with a completely empty array, I get a 400 back as expected because none of the values validate
          * based on the annotations - neither on the Foo object nor the Bar object.
          *
          * However, If I provide a default value for $foo->bar (by uncommenting the line), the form validates
          * **even though the other assertions on Foo fail**. 
-         *
-         * This behavior is not seen with the lgacy validator.
          *
          * Notes:
          *
