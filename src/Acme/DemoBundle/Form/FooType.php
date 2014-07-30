@@ -11,6 +11,7 @@ class FooType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $builder->add('bar', 'text');
         $builder->add('baz', 'text');
     }
 

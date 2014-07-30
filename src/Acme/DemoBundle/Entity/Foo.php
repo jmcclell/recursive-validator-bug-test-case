@@ -9,11 +9,31 @@ class Foo
     /**
      * @Assert\NotBlank()     
      */
-    public $baz;
+    protected $baz;
 
     /**
      * @Assert\NotNull()
      */
-    public $bar;
+    protected $bar;
 
+    public function getBaz()
+    {
+        return $this->baz;
+    }
+
+    public function setBaz($baz)
+    {
+        $this->baz = $baz;
+    }
+
+    public function getBar()
+    {
+        return $this->bar;
+    }
+
+    public function setBar($bar)
+    {
+        $this->bar = $bar;
+        return $this;
+    }
 }

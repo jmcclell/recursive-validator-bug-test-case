@@ -19,59 +19,37 @@ use Acme\DemoBundle\Entity\Bar;
 class DemoController extends Controller
 {
     /**
-     * @Route("/foo-with-default", name="_demo_foo_with_default")
+     * This action demonstrates the bug in its simplest (as far as I can tell) form.
+     *
+     * I am instantiating an empty Foo object which has 2 properties, ::bar and ::baz.
+     *
+     * The test sends an empty request.
+     *
+     * I am using $clearMissing = false.
+     *
+     * I expect $form-isValid() to return false, but it returns true.
+     * 
+     * @Route("/foo", name="_demo_foo")
      * @Template()
      */
-    public function fooWithDefaultAction(Request $request)
+    public function fooAction(Request $request)
     {
         $foo = new Foo();
-
-        /**
-         * Using the new recursive validator, if I leave the following line commented and submit the form
-         * with a completely empty array, I get a 400 back as expected because none of the values validate
-         * based on the annotations - neither on the Foo object nor the Bar object.
-         *
-         * However, If I provide a default value for $foo->bar (by uncommenting the line), the form validates
-         * **even though the other assertions on Foo fail**. 
-         *
-         * This behavior is not seen with the lgacy validator.
-         *
-         * Notes:
-         *
-         * 1. CSRF protection must be disabled
-         * 2. This seems to only occur with setting default values for nested objects, not scalar values
-         * 3. This only occurs with the new Validator API
-         *
-         * I would expect the form to honor all constraints, even if the input request is empty and a
-         * default value is set for one (or more) nested objects via this method.
-         */
-        $foo->bar = new Bar(1);
-        
+      
         $form = $this->createForm(new FooType(), $foo);
-        $form->submit($request->request->all(), false);
 
-        if ($form->isValid()) {            
-            return new Response('Valid.', 200);
-        } else {
-            return new Response('Invalid.', 400);
-        }
-    }
+        $form->submit($request->request->all(), $clearMissing = false);
 
-    /**
-     * @Route("/foo-without-default", name="_demo_foo_without_default")
-     * @Template()
-     */
-    public function fooWithoutDefaultAction(Request $request)
-    {
-        $foo = new Foo();
+        if ($form->isValid()) {           
 
-        //$foo->bar = new Bar(1);
-        
-        $form = $this->createForm(new FooType(), $foo);
-        $form->submit($request->request->all(), false);
+            $validator = $this->get('validator');
 
-        if ($form->isValid()) {            
-            return new Response('Valid.', 200);
+            if(0 < $errors = count($validator->validate($foo))) {
+                return new Response('Form failed to validate the entity properly.', 500);                    
+            } else {
+                return new Response('Valid.', 200);                    
+            }
+            
         } else {
             return new Response('Invalid.', 400);
         }
