@@ -21,7 +21,9 @@ class DemoController extends Controller
     /**
      * This action demonstrates the bug in its simplest (as far as I can tell) form.
      *
-     * I am instantiating an empty Foo object which has 2 properties, ::bar and ::baz.
+     * I am instantiating an empty Foo object which has 2 properties, ::bar and ::baz
+     *
+     * Each of these properties has a validation constraint that will fail when empty.
      *
      * The test sends an empty request.
      *
