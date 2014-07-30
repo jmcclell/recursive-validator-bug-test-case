@@ -35,7 +35,7 @@ class DemoController extends Controller
     public function fooAction(Request $request)
     {
         $foo = new Foo();
-      
+
         $form = $this->createForm(new FooType(), $foo);
 
         $form->submit($request->request->all(), $clearMissing = false);
