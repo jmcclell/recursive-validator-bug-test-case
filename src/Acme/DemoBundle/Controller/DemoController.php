@@ -45,12 +45,15 @@ class DemoController extends Controller
             $validator = $this->get('validator');
 
             if(0 < $errors = count($validator->validate($foo))) {
+                // this is what we actually hit
                 return new Response('Form failed to validate the entity properly.', 500);                    
             } else {
+                // we should never hit this given our test case
                 return new Response('Valid.', 200);                    
             }
             
         } else {
+            // this is what we expect to hit
             return new Response('Invalid.', 400);
         }
     }
